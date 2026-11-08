@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Musical - Músicas</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+
+<header>
+    <h1>Catálogo Musical</h1>
+    <p>// FAIXAS DO ÁLBUM SELECIONADO</p>
+</header>
+
+<main>
+    <h2>Lista de Músicas</h2>
+
+    <div class="lista">
+        <div class="card" th:each="musica : ${musicas}">
+            <h3 th:text="${musica.nome}">Nome da música</h3>
+            <p>Reprodução oficial:</p>
+            <a th:href="${musica.link}" target="_blank" rel="noopener noreferrer">
+                Assistir no YouTube →
+            </a>
+        </div>
+    </div>
+
+    <a class="voltar nav-link" th:href="@{/}" data-title="Discografia" data-sub="Voltando aos álbuns...">
+        ← Voltar aos Álbuns
+    </a>
+</main>
+
+<div id="page-transition-overlay">
+    <div class="transition-content">
+        <h1 class="transition-album-title" id="overlay-title">Carregando</h1>
+        <p class="transition-artist-name" id="overlay-sub">Aguarde...</p>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.getAttribute('href');
+            document.getElementById('overlay-title').textContent = this.getAttribute('data-title');
+            document.getElementById('overlay-sub').textContent = this.getAttribute('data-sub');
+
+            const overlay = document.getElementById('page-transition-overlay');
+            overlay.classList.add('active');
+
+            // Aumentado para 1200 milissegundos (1.2 segundos)
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 1200);
+        });
+    });
+</script>
+</body>
+</html>

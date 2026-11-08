@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Musical - Álbuns</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+
+<header>
+    <h1>Catálogo Musical</h1>
+    <p>// DISCOGRAFIA SELECIONADA</p>
+</header>
+
+<main>
+
+    <h2>
+        Álbuns de <span th:text="${cantor.nome}">Nome do cantor</span>
+    </h2>
+
+    <div class="lista">
+
+        <!-- Adicionamos atributos data-* para o JS ler o nome do álbum e do artista -->
+        <div class="card" th:each="album : ${albuns}">
+
+            <h3 th:text="${album.titulo}">Nome do álbum</h3>
+
+            <p>
+                Lançamento:
+                <span th:text="${album.anoLancamento}"></span>
+            </p>
+
+            <!-- Link com classe para o script capturar -->
+            <a class="album-link"
+               th:href="@{/albuns/{id}/musicas(id=${album.id})}"
+               th:data-album="${album.titulo}"
+               th:data-artista="${cantor.nome}">
+                Ver Músicas →
+            </a>
+
+        </div>
+
+    </div>
+
+    <a class="voltar" th:href="@{/}">
+        ← Voltar aos Artistas
+    </a>
+
+</main>
+
+<!-- Overlay da Tela de Carregamento (Fade + Brilho) -->
+<div id="page-transition-overlay">
+    <div class="transition-content">
+        <h1 class="transition-album-title" id="overlay-album">Nome do Álbum</h1>
+        <p class="transition-artist-name" id="overlay-artist">Nome do Artista</p>
+    </div>
+</div>
+
+<!-- Script de Transição -->
+<script>
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetUrl = this.getAttribute('href');
+            document.getElementById('overlay-title').textContent = this.getAttribute('data-title');
+            document.getElementById('overlay-sub').textContent = this.getAttribute('data-sub');
+
+            const overlay = document.getElementById('page-transition-overlay');
+            overlay.classList.add('active');
+
+            // Aumentado para 1200 milissegundos (1.2 segundos)
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 1200);
+        });
+    });
+</script>
+
+</body>
+</html>
